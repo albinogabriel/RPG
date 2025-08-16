@@ -14,6 +14,20 @@
 #define PRATA_POR_OURO 100
 #define BRONZE_POR_OURO (BRONZE_POR_PRATA * PRATA_POR_OURO)
 
+// FUNÇÃO PARA LER FLOAT COMO INT (EVITA BUGS COM VÍRGULA)
+int lerIntComFloor(const char *mensagem) {
+    float temp;
+    printf("%s", mensagem);
+    if (scanf("%f", &temp) != 1) {
+        printf("Entrada inválida!\n");
+        while (getchar() != '\n');
+        return -1;
+    }
+    while (getchar() != '\n');
+    return (int)floor(temp);
+}
+
+// FUNÇÃO DE ESPERAR
 void esperar(int segundos) {
     #ifdef _WIN32
         Sleep(segundos * 1000);
@@ -44,6 +58,13 @@ struct classes{
 // Agora moedas é armazenada em BRONZE apenas
 struct moedas{
     int bronzeTotal;
+};
+
+struct inimigos {
+    char nome[20];
+    int hp;
+    int ataque;
+    int defesa;
 };
 
 struct prota personagem;
@@ -82,6 +103,48 @@ void start() {
     
     default: printf("OPÇÃO INVÁLIDA\n"); break;
     }
+}
+
+//MENU
+void menu () {
+    int opcao;
+
+do{
+    printf("==MENU==\n");
+    printf("1. Ver Status\n");
+    printf("2. Ver Moedas\n");
+    printf("3. Continuar Jornada\n");
+    printf("0. Sair do Jogo\n");
+
+    opcao = lerIntComFloor("Escolha uma opção: ");
+
+    switch (opcao)
+    {
+    case 1:
+        printf("\n==Status==\n");
+        printf("Nome: %s\n", personagem.nome);
+        printf("Classe: %s\n", classe.classe);
+        printf("HP: %d | Def: %d | Atq: %d", classe.hp, classe.defesa, classe.ataque);
+        break;
+
+    case 2:
+        printf("\n==Moedas==\n");
+        mostrarMoedas();
+        break;
+    
+    case 3:
+        printf("\nVocê continua sua jornada...\n");
+        break;
+    
+    case 0:
+        printf("\nSaindo do jogo... Até a próxima\n");
+        break;
+
+    default:
+        printf("\nOpção inválida!\n");
+        break;
+    }
+}while (opcao != 0);
 }
 
 //PERSONAGEM
@@ -193,6 +256,8 @@ int main() {
     persona();
     esperar(3);
     iniHist();
+
+    menu();
 
     return 0;
 }
