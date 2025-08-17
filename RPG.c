@@ -3,6 +3,7 @@
 #include <locale.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 #ifdef _WIN32
     #include <windows.h>
@@ -45,11 +46,8 @@ void strToLower(char *str) {
 }
 
 struct prota{
-    char nome[200];
-};
-
-struct classes{
-    char classe[20];
+    char nome[200]; 
+    char nclasse[20];
     int hp;
     int defesa;
     int ataque;
@@ -68,7 +66,7 @@ struct inimigos {
 };
 
 struct prota personagem;
-struct classes classe;
+struct prota classe;
 struct moedas moedas;
 
 // Função para mostrar moedas formatadas
@@ -105,47 +103,7 @@ void start() {
     }
 }
 
-//MENU
-void menu () {
-    int opcao;
 
-do{
-    printf("==MENU==\n");
-    printf("1. Ver Status\n");
-    printf("2. Ver Moedas\n");
-    printf("3. Continuar Jornada\n");
-    printf("0. Sair do Jogo\n");
-
-    opcao = lerIntComFloor("Escolha uma opção: ");
-
-    switch (opcao)
-    {
-    case 1:
-        printf("\n==Status==\n");
-        printf("Nome: %s\n", personagem.nome);
-        printf("Classe: %s\n", classe.classe);
-        printf("HP: %d | Def: %d | Atq: %d", classe.hp, classe.defesa, classe.ataque);
-        break;
-
-    case 2:
-        printf("\n==Moedas==\n");
-        mostrarMoedas();
-        break;
-    
-    case 3:
-        printf("\nVocê continua sua jornada...\n");
-        break;
-    
-    case 0:
-        printf("\nSaindo do jogo... Até a próxima\n");
-        break;
-
-    default:
-        printf("\nOpção inválida!\n");
-        break;
-    }
-}while (opcao != 0);
-}
 
 //PERSONAGEM
 void persona() {
@@ -182,21 +140,21 @@ void persona() {
 
     while(1) {
         printf("O que você é (guerreiro, mago ou ladino)? ");
-            fgets(classe.classe, sizeof(classe.classe), stdin);
-            classe.classe[strcspn(classe.classe, "\n")] = 0;
-            strToLower(classe.classe);
+            fgets(classe.nclasse, sizeof(classe.nclasse), stdin);
+            classe.nclasse[strcspn(classe.nclasse, "\n")] = 0;
+            strToLower(classe.nclasse);
 
-        if (strcmp(classe.classe, "guerreiro") == 0) {
+        if (strcmp(classe.nclasse, "guerreiro") == 0) {
             classe.hp = 150;
             classe.defesa = 8;
             classe.ataque = 10;
             break;
-        } else if (strcmp(classe.classe, "mago") == 0) {
+        } else if (strcmp(classe.nclasse, "mago") == 0) {
             classe.hp = 100;
             classe.defesa = 5;
             classe.ataque = 15;
             break;
-        } else if (strcmp(classe.classe, "ladino") == 0) {
+        } else if (strcmp(classe.nclasse, "ladino") == 0) {
             classe.hp = 120;
             classe.defesa = 7;
             classe.ataque = 12;
@@ -208,7 +166,7 @@ void persona() {
 
     esperar(2);
 
-    printf("Classe escolhida: %s\n", classe.classe);
+    printf("Classe escolhida: %s\n", classe.nclasse);
     printf("HP: %d, Ataque: %d, Defesa: %d\n", classe.hp, classe.ataque, classe.defesa);
 
     esperar(2);
@@ -219,30 +177,73 @@ void persona() {
 //HISTÓRIA
 void iniHist() {
     printf("%s, vou te contar um pouco da história desse vilarejo...\n", personagem.nome);
-    esperar(1);
+    esperar(3);
     printf("Há muito tempo, esse vilarejo foi criado como centro de trocas até que um dragão veio e destruiu essa aldeia...\n");
-    esperar(2);
+    esperar(5);
     printf("Agora a duas semanas atrás, o mesmo dragão voltou e rapitou nossa princesa, Julia.\n");
-    esperar(1);
+    esperar(3);
     printf("...\n");
     esperar(1);
     printf("...\n");
     esperar(1);
     printf("Calma...\n");
-    esperar(1);
+    esperar(3);
     printf("%s! VOCÊ PODE SALVAR NOSSA PRINCESA!\n", personagem.nome);
-    printf("VOCÊ COMO O INCRÍVEL %s QUE VOCÊ É TENHO CERTEZA DE QUE CONSEGUIRÁ\n", classe.classe);
+    esperar(2);
+    printf("VOCÊ COMO O INCRÍVEL %s QUE VOCÊ É TENHO CERTEZA DE QUE CONSEGUIRÁ\n", classe.nclasse);
     esperar(4);
     printf("Esse vilarejo se chama Jeakis e fica ao Leste do maior comércio, Gudsa\n");
-    esperar(1);
+    esperar(3);
     printf("Tiveram que reconstruir um lugar para comércios depois que aqui foi destruído...\n");
-    esperar(2);
+    esperar(3);
     printf("Vou te dar 10 moedas de prata para começar sua jornada, o dragão foi a Nordeste daqui, %s, TRAGA NOSSA PRINCESA DEVOLTA POR FAVOR!\n", personagem.nome);
-    esperar(2);
+    esperar(5);
     
     adicionarMoedas(0, 10, 0);
     printf("Você recebeu 10 moedas de prata de Favern!\n");
     mostrarMoedas();
+}
+
+//MENU
+void menu () {
+    int opcao;
+
+do{
+    printf("==MENU==\n");
+    printf("1. Ver Status\n");
+    printf("2. Ver Moedas\n");
+    printf("3. Continuar Jornada\n");
+    printf("0. Sair do Jogo\n");
+
+    opcao = lerIntComFloor("Escolha uma opção: ");
+
+    switch (opcao)
+    {
+    case 1:
+        printf("\n==Status==\n");
+        printf("Nome: %s\n", personagem.nome);
+        printf("Classe: %s\n", classe.nclasse);
+        printf("HP: %d | Def: %d | Atq: %d\n", classe.hp, classe.defesa, classe.ataque);
+        break;
+
+    case 2:
+        printf("\n==Moedas==\n");
+        mostrarMoedas();
+        break;
+    
+    case 3:
+        printf("\nVocê continua sua jornada...\n");
+        break;
+    
+    case 0:
+        printf("\nSaindo do jogo... Até a próxima\n");
+        break;
+
+    default:
+        printf("\nOpção inválida!\n");
+        break;
+    }
+}while (opcao != 0);
 }
 
 //FUNÇÃO PRINCIPAL
