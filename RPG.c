@@ -91,6 +91,12 @@ void adicionarMoedas(int ouro, int prata, int bronze) {
     moedas.bronzeTotal += bronze;
 }
 
+//FIM (MORRENDO)
+int fimMorte() {
+    printf("Você morreu...");
+    return 0;
+}
+
 //SISTEMA DE LUTA
 void batalha(struct prota *personagem, struct inimigos *inimigos) {
     printf("\nUMA BATALHA INCIOU\n");
@@ -107,28 +113,31 @@ void batalha(struct prota *personagem, struct inimigos *inimigos) {
         if(danoInimigo < 1) danoInimigo = 1;
 
         //TURNO DO JOGADOR
-        printf("\n%s você deu %d de dano!\n", personagem->nome, danoJogador);
-        inimigos->hp - danoJogador;
+        printf("\n%s, você deu %d de dano!\n", personagem->nome, danoJogador);
+        inimigos->hp -= danoJogador;
         if(inimigos->hp <= 0){
-            printf("\n%s, parabéns você derrotou um %s", personagem->nome, inimigos->nome);
+            printf("\n%s, parabéns você derrotou um %s\n", personagem->nome, inimigos->nome);
             adicionarMoedas(0, 0, 20);
             printf("Foi adicionado 20 moedas de bronze!\n");
             mostrarMoedas();
             break;
         }
 
-    esperar(2);
+    esperar(4);
 
         //TURNO DO INIMIGO
         printf("\nVocê recebeu %d de dano!\n", danoInimigo);
-        personagem->hp - danoInimigo;
+        personagem->hp -= danoInimigo;
         if(personagem->hp <= 0){
             printf("Você foi derrotado...\n");
+            esperar(2);
+            fimMorte();
+            break;
         }
 
-    esperar(1);
+    esperar(2);
 
-        printf("HP %s: %d | HP %s: %d", personagem->nome, personagem->hp, inimigos->nome, inimigos->hp);
+        printf("HP %s: %d | HP %s: %d\n", personagem->nome, personagem->hp, inimigos->nome, inimigos->hp);
     }
 }
 
@@ -137,8 +146,7 @@ void start() {
     int start;
 
     printf("\t==RPG BOLADO==\n");
-    printf("DIGITE 1 PARA COMEÇAR: ");
-    scanf("%d", &start);
+    start = lerIntComFloor("DIGITE 1 PARA COMEÇAR: ");
 
     getchar();
 
@@ -253,7 +261,7 @@ void iniHist() {
 void continuar () {
     int opcao;
 
-    printf("\nVocê saí do vilarejo...\n");
+    printf("\n\nVocê saí do vilarejo...\n");
     esperar(2);
 
     printf("O que deseja fazer?\n");
@@ -268,15 +276,45 @@ void continuar () {
     switch (opcao)
     {
     case 1:
-        printf("Você adentrou a floresta...");
+        printf("Você adentrou a floresta...\n");
         break;
 
     case 2:
-        printf("Você caminha até Gudsa");
+        printf("Você caminha até Gudsa\n");
         break;
 
     case 3:
-        printf("Você procura por inimigos");
+        printf("Você procura por inimigos\n");
+
+        esperar(3);
+
+        int aparecerInimigo = rand() % 10 ;
+
+        if (aparecerInimigo < 7)
+        {
+            struct inimigos *inimigoAtual;
+            
+            int inimigo = rand() % 2;
+
+            if (inimigo == 0)
+            {
+                inimigoAtual = &goblin;
+                inimigoAtual->hp = 60;
+                printf("Você encontrou um %s", inimigoAtual);
+            } else if (inimigo == 1)
+            {
+                inimigoAtual = &esqueleto;
+                inimigoAtual->hp = 80;
+                printf("Você encontrou um %s", inimigoAtual);
+            }
+
+            batalha(&personagem, inimigoAtual);
+            
+        } else 
+        {
+            printf("\nNenhum inimigo foi encontrado!\n");
+        }
+        
         break;
     
     default:
@@ -284,6 +322,7 @@ void continuar () {
         break;
     }
 
+    getchar();
 }
 
 //MENU
@@ -326,11 +365,13 @@ do{
         break;
     }
 }while (opcao != 0);
+getchar();
 }
 
 //FUNÇÃO PRINCIPAL
 int main() {
     setlocale(LC_ALL, "Portuguese");
+    srand(time(NULL));
 
     moedas.bronzeTotal = 0;
 
