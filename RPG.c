@@ -59,15 +59,21 @@ struct moedas{
 };
 
 struct inimigos {
-    char nome[20];
+    char nome[30];
     int hp;
     int ataque;
     int defesa;
 };
 
+//variavel personagem
 struct prota personagem;
-struct prota classe;
+
+//vaiavel moeda
 struct moedas moedas;
+
+//vaiaveis para inimigos
+struct inimigos goblin = {"Goblin", 60, 6, 3};
+struct inimigos esqueleto = {"Esqueleto", 80, 8, 5};
 
 // Função para mostrar moedas formatadas
 void mostrarMoedas() {
@@ -83,6 +89,47 @@ void adicionarMoedas(int ouro, int prata, int bronze) {
     moedas.bronzeTotal += ouro * BRONZE_POR_OURO;
     moedas.bronzeTotal += prata * BRONZE_POR_PRATA;
     moedas.bronzeTotal += bronze;
+}
+
+//SISTEMA DE LUTA
+void batalha(struct prota *personagem, struct inimigos *inimigos) {
+    printf("\nUMA BATALHA INCIOU\n");
+
+    while (personagem->hp > 0 && inimigos->hp > 0)
+    {
+        //FUNÇÃO DENTRO DO WHILE PARA O DANO DO JOGADOR E DO INIMIGO
+        int variacao = (rand() % personagem->ataque) - 2;
+        int danoJogador = (personagem->ataque - inimigos->defesa) + variacao;
+        if(danoJogador < 1) danoJogador = 1;
+
+        int variacaoInimigo = (rand() % inimigos->ataque) - 2;
+        int danoInimigo = (inimigos->ataque - personagem->defesa) + variacaoInimigo;
+        if(danoInimigo < 1) danoInimigo = 1;
+
+        //TURNO DO JOGADOR
+        printf("\n%s você deu %d de dano!\n", personagem->nome, danoJogador);
+        inimigos->hp - danoJogador;
+        if(inimigos->hp <= 0){
+            printf("\n%s, parabéns você derrotou um %s", personagem->nome, inimigos->nome);
+            adicionarMoedas(0, 0, 20);
+            printf("Foi adicionado 20 moedas de bronze!\n");
+            mostrarMoedas();
+            break;
+        }
+
+    esperar(2);
+
+        //TURNO DO INIMIGO
+        printf("\nVocê recebeu %d de dano!\n", danoInimigo);
+        personagem->hp - danoInimigo;
+        if(personagem->hp <= 0){
+            printf("Você foi derrotado...\n");
+        }
+
+    esperar(1);
+
+        printf("HP %s: %d | HP %s: %d", personagem->nome, personagem->hp, inimigos->nome, inimigos->hp);
+    }
 }
 
 //START
@@ -102,8 +149,6 @@ void start() {
     default: printf("OPÇÃO INVÁLIDA\n"); break;
     }
 }
-
-
 
 //PERSONAGEM
 void persona() {
@@ -140,24 +185,24 @@ void persona() {
 
     while(1) {
         printf("O que você é (guerreiro, mago ou ladino)? ");
-            fgets(classe.nclasse, sizeof(classe.nclasse), stdin);
-            classe.nclasse[strcspn(classe.nclasse, "\n")] = 0;
-            strToLower(classe.nclasse);
+            fgets(personagem.nclasse, sizeof(personagem.nclasse), stdin);
+            personagem.nclasse[strcspn(personagem.nclasse, "\n")] = 0;
+            strToLower(personagem.nclasse);
 
-        if (strcmp(classe.nclasse, "guerreiro") == 0) {
-            classe.hp = 150;
-            classe.defesa = 8;
-            classe.ataque = 10;
+        if (strcmp(personagem.nclasse, "guerreiro") == 0) {
+            personagem.hp = 150;
+            personagem.defesa = 8;
+            personagem.ataque = 10;
             break;
-        } else if (strcmp(classe.nclasse, "mago") == 0) {
-            classe.hp = 100;
-            classe.defesa = 5;
-            classe.ataque = 15;
+        } else if (strcmp(personagem.nclasse, "mago") == 0) {
+            personagem.hp = 100;
+            personagem.defesa = 5;
+            personagem.ataque = 15;
             break;
-        } else if (strcmp(classe.nclasse, "ladino") == 0) {
-            classe.hp = 120;
-            classe.defesa = 7;
-            classe.ataque = 12;
+        } else if (strcmp(personagem.nclasse, "ladino") == 0) {
+            personagem.hp = 120;
+            personagem.defesa = 7;
+            personagem.ataque = 12;
             break;
         } else {
             printf("Você tem certeza de que era isso? Tente se lembrar!\n");
@@ -166,8 +211,8 @@ void persona() {
 
     esperar(2);
 
-    printf("Classe escolhida: %s\n", classe.nclasse);
-    printf("HP: %d, Ataque: %d, Defesa: %d\n", classe.hp, classe.ataque, classe.defesa);
+    printf("Classe escolhida: %s\n", personagem.nclasse);
+    printf("HP: %d, Ataque: %d, Defesa: %d\n", personagem.hp, personagem.ataque, personagem.defesa);
 
     esperar(2);
 
@@ -190,7 +235,7 @@ void iniHist() {
     esperar(3);
     printf("%s! VOCÊ PODE SALVAR NOSSA PRINCESA!\n", personagem.nome);
     esperar(2);
-    printf("VOCÊ COMO O INCRÍVEL %s QUE VOCÊ É TENHO CERTEZA DE QUE CONSEGUIRÁ\n", classe.nclasse);
+    printf("VOCÊ COMO O INCRÍVEL %s QUE VOCÊ É TENHO CERTEZA DE QUE CONSEGUIRÁ\n", personagem.nclasse);
     esperar(4);
     printf("Esse vilarejo se chama Jeakis e fica ao Leste do maior comércio, Gudsa\n");
     esperar(3);
@@ -202,6 +247,43 @@ void iniHist() {
     adicionarMoedas(0, 10, 0);
     printf("Você recebeu 10 moedas de prata de Favern!\n");
     mostrarMoedas();
+}
+
+//CONTINUAR JORNADA
+void continuar () {
+    int opcao;
+
+    printf("\nVocê saí do vilarejo...\n");
+    esperar(2);
+
+    printf("O que deseja fazer?\n");
+
+    printf("1. Explorar a floresta\n");
+    printf("2. Ir para Gudsa\n");
+    printf("3. Procurar inimigos\n");
+    printf("0. Voltar para o Menu\n");
+
+    opcao = lerIntComFloor("Escolha uma opção: ");
+
+    switch (opcao)
+    {
+    case 1:
+        printf("Você adentrou a floresta...");
+        break;
+
+    case 2:
+        printf("Você caminha até Gudsa");
+        break;
+
+    case 3:
+        printf("Você procura por inimigos");
+        break;
+    
+    default:
+        printf("\nOpção Inválida\n");
+        break;
+    }
+
 }
 
 //MENU
@@ -222,8 +304,8 @@ do{
     case 1:
         printf("\n==Status==\n");
         printf("Nome: %s\n", personagem.nome);
-        printf("Classe: %s\n", classe.nclasse);
-        printf("HP: %d | Def: %d | Atq: %d\n", classe.hp, classe.defesa, classe.ataque);
+        printf("Classe: %s\n", personagem.nclasse);
+        printf("HP: %d | Def: %d | Atq: %d\n", personagem.hp, personagem.defesa, personagem.ataque);
         break;
 
     case 2:
@@ -232,7 +314,7 @@ do{
         break;
     
     case 3:
-        printf("\nVocê continua sua jornada...\n");
+        continuar();
         break;
     
     case 0:
