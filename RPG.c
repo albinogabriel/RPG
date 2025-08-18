@@ -277,6 +277,43 @@ void continuar () {
     {
     case 1:
         printf("Você adentrou a floresta...\n");
+
+        int aparecerInimigo = rand() % 10;
+
+        if (aparecerInimigo < 7 && aparecerInimigo > 4)
+        {
+            struct inimigos *inimigoAtual;
+            
+            int inimigo = rand() % 2;
+
+            if (inimigo == 0)
+            {
+                inimigoAtual = &goblin;
+                inimigoAtual->hp = 60;
+                printf("Você encontrou um %s\n", inimigoAtual->nome);
+            } else if (inimigo == 1)
+            {
+                inimigoAtual = &esqueleto;
+                inimigoAtual->hp = 80;
+                printf("Você encontrou um %s\n", inimigoAtual->nome);
+            }
+
+            batalha(&personagem, inimigoAtual);
+            
+        }else if (aparecerInimigo <= 4)
+        {
+            printf("Você achou uma frutinha!\n");
+            esperar(2);
+            printf("Você ganhou + 15 pontos de HP");
+            personagem.hp += 15;
+        } else if (aparecerInimigo >=7)
+        {
+            printf("Você achou uma frutinha!\n");
+            esperar(2);
+            printf("Você ganhou + 20 pontos de HP");
+            personagem.hp += 20;
+        }
+        
         break;
 
     case 2:
@@ -288,8 +325,6 @@ void continuar () {
 
         esperar(3);
 
-        int aparecerInimigo = rand() % 10 ;
-
         if (aparecerInimigo < 7)
         {
             struct inimigos *inimigoAtual;
@@ -300,12 +335,12 @@ void continuar () {
             {
                 inimigoAtual = &goblin;
                 inimigoAtual->hp = 60;
-                printf("Você encontrou um %s", inimigoAtual);
+                printf("Você encontrou um %s\n", inimigoAtual->nome);
             } else if (inimigo == 1)
             {
                 inimigoAtual = &esqueleto;
                 inimigoAtual->hp = 80;
-                printf("Você encontrou um %s", inimigoAtual);
+                printf("Você encontrou um %s\n", inimigoAtual->nome);
             }
 
             batalha(&personagem, inimigoAtual);
