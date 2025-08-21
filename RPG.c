@@ -260,7 +260,15 @@ void iniHist() {
     printf("Você recebeu 10 moedas de prata de Favern!\n");
     mostrarMoedas();
 }
+void lojaGudsaG() {
 
+}
+void lojaGudsaM() {
+
+}
+void lojaGudsaL() {
+    
+}
 //GUDSA
 void gudsa () {
     
