@@ -15,6 +15,10 @@
 #define PRATA_POR_OURO 100
 #define BRONZE_POR_OURO (BRONZE_POR_PRATA * PRATA_POR_OURO)
 
+// Protótipos das funções
+void continuar();
+void jeakis();
+
 // FUNÇÃO PARA LER FLOAT COMO INT (EVITA BUGS COM VÍRGULA)
 int lerIntComFloor(const char *mensagem) {
     float temp;
@@ -94,7 +98,7 @@ void adicionarMoedas(int ouro, int prata, int bronze) {
 //FIM (MORRENDO)
 int fimMorte() {
     printf("Você morreu...");
-    return 0;
+    exit(0);
 }
 
 //SISTEMA DE LUTA
@@ -257,30 +261,88 @@ void iniHist() {
     mostrarMoedas();
 }
 
-//CONTINUAR JORNADA
-void continuar () {
+//GUDSA
+void gudsa () {
+    
+    if (rand() %2 == 1)
+    {
+    
+        struct inimigos *inimigoAtual;
+            
+            int inimigo = rand() % 2;
+
+            if (inimigo == 0)
+            {
+                inimigoAtual = &goblin;
+                inimigoAtual->hp = 60;
+                printf("Você encontrou um %s\n", inimigoAtual->nome);
+
+                esperar(2);
+            } else if (inimigo == 1)
+            {
+                inimigoAtual = &esqueleto;
+                inimigoAtual->hp = 80;
+                printf("Você encontrou um %s\n", inimigoAtual->nome);
+
+                esperar(2);
+            }
+
+            batalha(&personagem, inimigoAtual);
+    
+    }
+
+    printf("Você chegou em Gudsa!");
+
     int opcao;
 
-    printf("\n\nVocê saí do vilarejo...\n");
-    esperar(2);
+    do{
 
-    printf("O que deseja fazer?\n");
+    printf("\n\t==GUDSA\n");
 
-    printf("1. Explorar a floresta\n");
-    printf("2. Ir para Gudsa\n");
-    printf("3. Procurar inimigos\n");
-    printf("0. Voltar para o Menu\n");
+    printf("1. Ver Status\n");
+    printf("2. Ver Moedas\n");
+    printf("3. Ver Lojas\n");
+    printf("4. Explorar a floresta\n");
+    printf("5. Procurar Inimigos\n");
+    printf("0. Fechar Jogo\n");
 
-    opcao = lerIntComFloor("Escolha uma opção: ");
+    opcao = lerIntComFloor ("Escolha uma opção: ");
 
     switch (opcao)
     {
     case 1:
-        printf("Você adentrou a floresta...\n");
+        printf("\n==Status==\n");
+        printf("Nome: %s\n", personagem.nome);
+        printf("Classe: %s\n", personagem.nclasse);
+        printf("HP: %d | Def: %d | Atq: %d\n", personagem.hp, personagem.defesa, personagem.ataque);
+        break;
+
+    case 2:
+        printf("\n==Moedas==\n");
+        mostrarMoedas();
+        break;
+
+     case 3:
+
+        if (strcmp(personagem.nclasse, "guerreiro") == 0)
+        {
+            lojaGudsaG();
+        } else if (strcmp(personagem.nclasse, "mago") == 0)
+        {
+            lojaGudsaM();
+        } else if (strcmp(personagem.nclasse, "ladino") == 0)
+        {
+            lojaGudsaL();
+        }
+        
+        break;
+
+    case 4:
+        printf("Você adentrou a uma floresta...\n");
 
         int aparecerInimigo = rand() % 10;
 
-        if (aparecerInimigo < 7 && aparecerInimigo > 4)
+        if (aparecerInimigo < 9 && aparecerInimigo > 4)
         {
             struct inimigos *inimigoAtual;
             
@@ -291,11 +353,15 @@ void continuar () {
                 inimigoAtual = &goblin;
                 inimigoAtual->hp = 60;
                 printf("Você encontrou um %s\n", inimigoAtual->nome);
+
+                esperar(2);
             } else if (inimigo == 1)
             {
                 inimigoAtual = &esqueleto;
                 inimigoAtual->hp = 80;
                 printf("Você encontrou um %s\n", inimigoAtual->nome);
+
+                esperar(2);
             }
 
             batalha(&personagem, inimigoAtual);
@@ -306,20 +372,136 @@ void continuar () {
             esperar(2);
             printf("Você ganhou + 15 pontos de HP");
             personagem.hp += 15;
-        } else if (aparecerInimigo >=7)
+        } else if (aparecerInimigo >=9)
         {
             printf("Você achou uma frutinha!\n");
             esperar(2);
             printf("Você ganhou + 20 pontos de HP");
             personagem.hp += 20;
         }
-        
         break;
 
+    case 5:
+        printf("Você procura por inimigos\n");
+
+        esperar(3);
+
+        if (aparecerInimigo < 7)
+        {
+            struct inimigos *inimigoAtual;
+            
+            int inimigo = rand() % 2;
+
+            if (inimigo == 0)
+            {
+                inimigoAtual = &goblin;
+                inimigoAtual->hp = 60;
+                printf("Você encontrou um %s\n", inimigoAtual->nome);
+
+                esperar(2);
+            } else if (inimigo == 1)
+            {
+                inimigoAtual = &esqueleto;
+                inimigoAtual->hp = 80;
+                printf("Você encontrou um %s\n", inimigoAtual->nome);
+
+                esperar(2);
+            }
+
+            batalha(&personagem, inimigoAtual);
+            
+        } else 
+        {
+            printf("\nNenhum inimigo foi encontrado!\n");
+        }
+        break;
+
+    case 0:
+        
+        break;   
+
+    default:
+        printf("Opção inválida\n");
+        break;
+    }
+
+    }while (opcao != 0);
+}
+
+//CONTINUAR JORNADA
+void continuar () {
+    int opcao;
+
+    printf("\n\nVocê saí do vilarejo...\n");
+    esperar(2);
+
+    do{
+    printf("\n\t==JEAKIS==\n");
+
+    printf("1. Explorar a floresta\n");
+    printf("2. Ir para Gudsa\n");
+    printf("3. Procurar inimigos\n");
+    printf("0. Voltar para o Menu\n");
+
+    opcao = lerIntComFloor("Escolha uma opção: ");
+
+
+    switch (opcao)
+    {
+
+        //FLORESTA
+    case 1:
+        printf("Você adentrou a uma floresta...\n");
+
+        int aparecerInimigo = rand() % 10;
+
+        if (aparecerInimigo < 9 && aparecerInimigo > 4)
+        {
+            struct inimigos *inimigoAtual;
+            
+            int inimigo = rand() % 2;
+
+            if (inimigo == 0)
+            {
+                inimigoAtual = &goblin;
+                inimigoAtual->hp = 60;
+                printf("Você encontrou um %s\n", inimigoAtual->nome);
+
+                esperar(2);
+            } else if (inimigo == 1)
+            {
+                inimigoAtual = &esqueleto;
+                inimigoAtual->hp = 80;
+                printf("Você encontrou um %s\n", inimigoAtual->nome);
+
+                esperar(2);
+            }
+
+            batalha(&personagem, inimigoAtual);
+            
+        }else if (aparecerInimigo <= 4)
+        {
+            printf("Você achou uma frutinha!\n");
+            esperar(2);
+            printf("Você ganhou + 15 pontos de HP");
+            personagem.hp += 15;
+        } else if (aparecerInimigo >=9)
+        {
+            printf("Você achou uma frutinha!\n");
+            esperar(2);
+            printf("Você ganhou + 20 pontos de HP");
+            personagem.hp += 20;
+        }
+        break;
+
+        //GUDSA
     case 2:
         printf("Você caminha até Gudsa\n");
+        esperar(2);
+        gudsa();
         break;
 
+        //PROCURAR UM INIMIGO
     case 3:
         printf("Você procura por inimigos\n");
 
@@ -336,11 +518,15 @@ void continuar () {
                 inimigoAtual = &goblin;
                 inimigoAtual->hp = 60;
                 printf("Você encontrou um %s\n", inimigoAtual->nome);
+
+                esperar(2);
             } else if (inimigo == 1)
             {
                 inimigoAtual = &esqueleto;
                 inimigoAtual->hp = 80;
                 printf("Você encontrou um %s\n", inimigoAtual->nome);
+
+                esperar(2);
             }
 
             batalha(&personagem, inimigoAtual);
@@ -349,23 +535,30 @@ void continuar () {
         {
             printf("\nNenhum inimigo foi encontrado!\n");
         }
-        
+        break;
+
+        //RETORNAR PARA O MENU
+    case 0:
+            printf("Você retorna ao vilarejo...");
+            esperar(2);
+            jeakis();
         break;
     
     default:
         printf("\nOpção Inválida\n");
         break;
     }
+    } while (opcao != 0);
 
     getchar();
 }
 
 //MENU
-void menu () {
+void jeakis () {
     int opcao;
 
 do{
-    printf("==MENU==\n");
+    printf("\t==JEAKIS==\n");
     printf("1. Ver Status\n");
     printf("2. Ver Moedas\n");
     printf("3. Continuar Jornada\n");
@@ -416,7 +609,7 @@ int main() {
     esperar(3);
     iniHist();
 
-    menu();
+ jeakis();
 
     return 0;
 }
