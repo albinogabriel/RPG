@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+#include <locale.h>
 
 #ifdef _WIN32
     #include <windows.h>
@@ -66,6 +67,7 @@ void pausa();
 
 // Função principal
 int main() {
+    setlocale(LC_ALL, "Portuguese");
     srand(time(NULL));
     configurarJogo();
     iniciarJogo();
