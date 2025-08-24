@@ -38,13 +38,14 @@ typedef struct {
     int hp;
     int ataque;
     int defesa;
+    int recompensa;
 } Inimigo;
 
 // Variáveis globais
 Personagem personagem;
 Moedas moedas;
-Inimigo goblin = {"Goblin", 60, 6, 3};
-Inimigo esqueleto = {"Esqueleto", 80, 8, 5};
+Inimigo goblin = {"Goblin", 60, 6, 3, 30};
+Inimigo esqueleto = {"Esqueleto", 80, 8, 5, 60};
 
 // Protótipos de funções
 void configurarJogo();
@@ -180,8 +181,8 @@ void batalha(Inimigo *inimigo) {
         
         if (inimigoCopia.hp <= 0) {
             printf("\nVocê derrotou o %s!\n", inimigoCopia.nome);
-            adicionarMoedas(0, 0, 20);
-            printf("Ganhou 20 moedas de bronze!\n");
+            adicionarMoedas(0, 0, inimigoCopia.recompensa);
+            printf("Ganhou %d moedas de bronze!\n", inimigoCopia.recompensa);
             mostrarMoedas();
             break;
         }
@@ -299,6 +300,7 @@ void continuarJornada() {
     } while (opcao != 0);
 }
 
+//Floresta
 void explorarFloresta() {
     printf("\nVocê adentra a floresta...\n");
     ESPERAR(2);
@@ -322,6 +324,7 @@ void explorarFloresta() {
     pausa();
 }
 
+//Procurar inimigos
 void procurarInimigos() {
     printf("\nProcurando por inimigos...\n");
     ESPERAR(2);
@@ -338,6 +341,7 @@ void procurarInimigos() {
     pausa();
 }
 
+//Gudsa
 void areaGudsa() {
     printf("\n=== GUDSA - CIDADE COMERCIAL ===\n");
     
@@ -395,6 +399,7 @@ void areaGudsa() {
     } while (opcao != 0);
 }
 
+//Loja guerreiro
 void lojaGuerreiro() {
     printf("\n=== LOJA DE EQUIPAMENTOS PARA GUERREIRO ===\n");
     printf("1. Espada Longa (+3 de ataque) - 5 prata\n");
@@ -421,7 +426,6 @@ void lojaGuerreiro() {
         case 3:
             precoPrata = 3;
             item = "Poção de Cura";
-            // Para poção, valor é a quantidade de cura
             break;
         case 0:
             return;
@@ -455,6 +459,7 @@ void lojaGuerreiro() {
     pausa();
 }
 
+//Loja mago
 void lojaMago() {
     printf("\n=== LOJA DE ITENS MÁGICOS ===\n");
     printf("1. Cajado Arcano (+4 de ataque) - 6 prata\n");
@@ -481,7 +486,6 @@ void lojaMago() {
         case 3:
             precoPrata = 3;
             item = "Poção de Cura";
-            // Para poção, valor é a quantidade de cura
             break;
         case 0:
             return;
@@ -515,6 +519,7 @@ void lojaMago() {
     pausa();
 }
 
+//Loja ladino
 void lojaLadino() {
     printf("\n=== LOJA DE EQUIPAMENTOS DE LADINO ===\n");
     printf("1. Adagas Duplas (+5 de ataque) - 6 prata\n");
@@ -577,6 +582,7 @@ void lojaLadino() {
     pausa();
 }
 
+//Status
 void mostrarStatus() {
     printf("\n=== STATUS ===\n");
     printf("Nome: %s\n", personagem.nome);
@@ -587,6 +593,7 @@ void mostrarStatus() {
     pausa();
 }
 
+//Ler opção
 int lerOpcao(const char *mensagem) {
     float temp;
     printf("%s", mensagem);
@@ -599,6 +606,7 @@ int lerOpcao(const char *mensagem) {
     return (int)floor(temp);
 }
 
+//Pausa
 void pausa() {
     printf("\nPressione Enter para continuar...");
     getchar();
