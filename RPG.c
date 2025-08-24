@@ -458,24 +458,122 @@ void lojaGuerreiro() {
 void lojaMago() {
     printf("\n=== LOJA DE ITENS MÁGICOS ===\n");
     printf("1. Cajado Arcano (+4 de ataque) - 6 prata\n");
-    printf("2. Robes Mágicas (+3 de defesa) - 5 prata\n");
-    printf("3. Poção de Mana (recupera 2 feitiços) - 4 prata\n");
+    printf("2. Vestes Mágicas (+3 de defesa) - 5 prata\n");
+    printf("3. Poção de Cura (+30 HP) - 3  prata\n");
     printf("0. Sair\n");
     
-    // Implementação similar à lojaGuerreiro
-    printf("Loja de Mago em desenvolvimento...\n");
+    int opcao = lerOpcao("Escolha um item: ");
+    int precoPrata = 0;
+    int valor = 0;
+    char *item = NULL;
+    
+    switch (opcao) {
+        case 1:
+            precoPrata = 6;
+            item = "Cajado Arcano";
+            valor = 4;
+            break;
+        case 2:
+            precoPrata = 5;
+            item = "Vestes Mágicas";
+            valor = 3;
+            break;
+        case 3:
+            precoPrata = 3;
+            item = "Poção de Cura";
+            // Para poção, valor é a quantidade de cura
+            break;
+        case 0:
+            return;
+        default:
+            printf("Item inválido!\n");
+            return;
+    }
+    
+    int precoBronze = precoPrata * BRONZE_POR_PRATA;
+    
+    if (moedas.bronzeTotal >= precoBronze) {
+        moedas.bronzeTotal -= precoBronze;
+        printf("Você comprou: %s\n", item);
+        
+        if (opcao == 3) {
+            personagem.hp += 30;
+            printf("HP recuperado! Seu HP agora é: %d\n", personagem.hp);
+        } else if (opcao == 1) {
+            personagem.ataque += valor;
+            printf("Seu ataque agora é: %d\n", personagem.ataque);
+        } else if (opcao == 2) {
+            personagem.defesa += valor;
+            printf("Sua defesa agora é: %d\n", personagem.defesa);
+        }
+        
+        mostrarMoedas();
+    } else {
+        printf("Você não tem moedas suficientes!\n");
+    }
+    
     pausa();
 }
 
 void lojaLadino() {
     printf("\n=== LOJA DE EQUIPAMENTOS DE LADINO ===\n");
-    printf("1. Adagas Duplas (+4 de ataque) - 5 prata\n");
+    printf("1. Adagas Duplas (+5 de ataque) - 6 prata\n");
     printf("2. Armadura de Couro (+4 de defesa) - 6 prata\n");
-    printf("3. Poção de Invisibilidade (escape automático) - 7 prata\n");
+    printf("3. Poção de Cura (+30 HP) - 3 prata\n");
     printf("0. Sair\n");
     
-    // Implementação similar à lojaGuerreiro
-    printf("Loja de Ladino em desenvolvimento...\n");
+    int opcao = lerOpcao("Escolha um item: ");
+    int precoPrata = 0;
+    int valor = 0;
+    char *item;
+
+    switch (opcao)
+    {
+    case 1:
+        precoPrata = 6;
+        item = "Adagas Duplas";
+        valor = 5;
+        break;
+
+    case 2:
+        precoPrata = 6;
+        item = "Armadura de Couro";
+        valor = 4;
+        break;
+    
+    case 3:
+        precoPrata = 3;
+        item = "Poção de Cura";
+        break;
+    
+    case 0:
+        break;
+
+    default:
+        printf("Item inválido!");
+        return;
+    }
+
+    int precoBronze = precoPrata * BRONZE_POR_PRATA;
+    
+    if (moedas.bronzeTotal >= precoBronze){
+        moedas.bronzeTotal -= precoBronze;
+        printf("Você comprou um %s!\n", item);
+
+        if (opcao == 1){
+            personagem.ataque += 5;
+            printf("Seu ataque agora é %d!\n", personagem.ataque);
+        } else if (opcao == 2){
+            personagem.defesa += 4;
+            printf("Sua defesa agora é %d!\n", personagem.defesa);
+        } else if (opcao == 3){
+            personagem.hp += 30;
+            printf("Vida recuperada! Sua vida agora é %d!\n", personagem.hp);
+        } 
+    }else{
+            printf("Você não tem moedas o suficientes!\n");
+    }
+    
     pausa();
 }
 
