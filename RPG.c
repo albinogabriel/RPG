@@ -46,6 +46,8 @@ Personagem personagem;
 Moedas moedas;
 Inimigo goblin = {"Goblin", 60, 6, 3, 30};
 Inimigo esqueleto = {"Esqueleto", 80, 8, 5, 60};
+Inimigo orc = {"Orc", 130, 10, 5, 200};
+Inimigo lobo = {"Lobo", 70, 6, 40};
 
 // Protótipos de funções
 void configurarJogo();
